@@ -1,68 +1,145 @@
----
-layout: blog
-title: index
-permalink: /
----
+<!DOCTYPE html>
+<html lang="en">
+    <head>
 
-<div class="navbar-wrapper">
-  <nav class="navbar navbar-default navbar-fixed-top" role="navigation">
-    <div class="container">
-      <div class="navbar-header page-scroll">
-        <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar" aria-expanded="false" aria-controls="navbar">
-          <span class="sr-only">Toggle navigation</span>
-          <span class="icon-bar"></span>
-          <span class="icon-bar"></span>
-          <span class="icon-bar"></span>
-        </button>
-        <a class="navbar-brand" href="#page-top" id="i18_title"><span data-i18n="website.title">{{ site.title }}</span></a>
-      </div>
-      <div id="navbar" class="navbar-collapse collapse">
-        <ul class="nav navbar-nav navbar-right" id="i18_navbar">
-          {% for section in site.data.landing %}
-          <li>
-            {% if section.page %}
-              <a class="page-scroll" href="{{ section.page}} ">
-            {% else %}
-              <a class="page-scroll" href="{{ section.id | prepend: '#'}} ">
-            {% endif %}
-              <span data-i18n="{{ section.i18n }}">{{ section.name }}</span>
-            </a>
-          </li>
-          {% endfor %}
-          {% for language in site.data.index.language %}
-          <li>
-            <a id="set_lang_{{ language.locale }}" class="btn btn-sm set_{{ language.locale }}" data-locale="{{ language.locale }}">
-              <img src="{{ language.flag | prepend: site.baseurl }}" height="16" width="16">
-            </a>
-          </li>
-          {% endfor %}
-        </ul>
-      </div>
-    </div>
-  </nav>
-</div>
-{% if site.index_carousel %}
-{% include carousel.html %}
-{% endif %}
+	    
+        <title>Prateksha Udhayanan</title>
+       <meta http-equiv="content-type" content="text/html; charset=UTF-8">
+        <meta charset="utf-8">
+        <meta property="og:url" content="http://prateksha.me" />
+	    <meta property="og:title" content="Prateksha Udhayanan" />
+	    <meta property="og:image" content="http://prateksha.me/img/Prateksha.jpg" />
+	    <meta http-equiv="X-UA-Compatible" content="IE=edge"> 
+	    <meta name="author" content="Aishwarya Agarwal">
+         <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+      <!-- <link rel="shortcut icon" type="image/png" href="favicon.ico"/>   style="text-align:center"  -->
 
-{% for section in site.data.landing %}
-{% assign loopindex = forloop.index | modulo: 2 %}
-<section id="{{ section.id }}" class="features {% if loopindex != 1 %} gray-section {% endif %} {{ section.css }}" style="margin-top: 0;">
-  {% include sections/{{section.tpl}} %}
-</section>
-{% endfor %}
-<style>
-iframe {
-  -moz-transform: scale(0.25, 0.25);
-  -webkit-transform: scale(0.25, 0.25);
-  -o-transform: scale(0.25, 0.25);
-  -ms-transform: scale(0.25, 0.25);
-  transform: scale(0.25, 0.25);
-  -moz-transform-origin: top left;
-  -webkit-transform-origin: top left;
-  -o-transform-origin: top left;
-  -ms-transform-origin: top left;
-  transform-origin: top left;
-}
-</style>
-<!-- <iframe src="https://www.maimemo.com/share/page/?uid=779139&pid=660" style="display: none;"></iframe> -->
+        <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+       
+        <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js" integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1" crossorigin="anonymous"></script>
+        <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js" integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous"></script>
+        <link href='https://fonts.googleapis.com/css?family=EB+Garamond' rel='stylesheet' type='text/css'> 
+	<link rel="stylesheet" href="css/style.css">
+    </head>
+    <body>
+        <div class="container mt-5">
+            <div class="row mb-3">
+                <div class="col">
+                    <h1>Prateksha Udhayanan</h1>
+                </div>
+            </div>
+            <div class="row">
+                <div style="text-align:center" class="col-lg-4 col-md-6 order-0 order-xs-0 order-sm-0 order-md-1 order-lg-1" >
+                    <div class="card mb-3">
+                        <img class="card-img-top" src="img/Prateksha.jpg" alt="Prateksha Udhayanan">
+                        <div class="card-body">
+                            <h5 class="card-title">
+                                <b>Prateksha Udhayanan</b>
+                            </h5>
+				
+                            <p class="card-text">
+                            Adobe Research (Current)</br>IIIT Bangalore (BTech + MTech)
+                            </p>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-lg-8 col-md-6 order-1 order-xs-1 order-sm-1 order-md-0 order-lg-0">
+                    <p>
+                        Hi! I'm a Research Associate working with <a href="https://research.adobe.com/" target="_blank">Adobe Research, Bangalore, India</a> lab. My reasearch ineterests primarily revolve 
+                        around computer vision, with a strong emphasis on understanding multi-modal input forms
+                        to enhance image and video retrievals as well as generations. 
+		            <p>    
+                        I graduated from <a href="https://www.iiitb.ac.in/" target="_blank">IIIT Bangalore</a>, India, in 2022 with a Bachelor’s degree in Computer Science Engineering and a Master’s degree 
+                        in Artificial Intelligence and Machine Learning. During my undergraduate study, I spent three months as a research intern at <a href="https://research.adobe.com/" target="_blank">
+                        Adobe Research</a>, India where I worked with <a href="https://research.adobe.com/person/balaji-vasan-srinivasan/" target="_blank">Dr. Balaji Vasan Srinivasan</a> on document to video 
+                        tranformation, which involved image/video retreival and re-ranking techniques, along with sequence optimization probmens.                                           
+                    </p>
+                    <br/>  
+<!-- 		  <div class="row">
+	                <div class="col"> -->
+	                    <p>Email: pratekshau@gmail.com</p>
+	                    <p>
+	                        Links:
+	                        [<a href="files/CV_Prateksha.pdf" target="_blank">CV</a>] [<a href="https://www.linkedin.com/in/prateksha-udhayanan-561b00155/" target="_blank">LinkedIn</a>] 
+	                    [<a href="https://github.com/prateksha" target="_blank">Github</a>] [<a href="https://scholar.google.com/citations?user=IMX3NNYAAAAJ&hl=en" target="_blank">Google Scholar</a>] 
+	                    </p>
+<!-- 	                </div>
+	            </div> -->
+                </div>
+
+		    
+		    
+            </div>
+            
+           
+
+
+               <!-- <div class="row">
+                <div class="col">
+                    <h2>Recent News</h2>
+                    <ul>
+                        <li>
+                            (01/03) Updated ...
+                        </li>
+                    </ul>
+                </div>
+            </div>
+            <hr> -->
+            <div class="row" id="publications">
+                <div class="col">
+                    <h2>Publications</h2>
+
+                    <!-- <h3>2023</h3> -->
+                    <ul class="pl">
+                        <li>
+                            <a href="https://arxiv.org/pdf/2309.00613.pdf" target="_blank"> <b>Iterative Multi-granular Image Editing using Diffusion Models</b></a>
+                            <br/>
+                            Accepted In <a><b> Winter Conference on Applications of Computer Vision (WACV)</b></a>, 2024.
+                            <br/>
+			            </li>
+                        <li>
+			                <a href="https://openaccess.thecvf.com/content/WACV2023/papers/Udhayanan_Recipe2Video_Synthesizing_Personalized_Videos_From_Recipe_Texts_WACV_2023_paper.pdf" target="_blank"><b>Recipe2Video: Synthesizing Personalized Videos from Recipe Texts</b></a>
+                            <br/>
+                            In <a><b>Winter Conference on Applications of Computer Vision (WACV)</b></a>, 2023.
+                            <br/>
+
+			            </li>
+                        <li>
+                             <a href="https://dl.acm.org/doi/abs/10.1145/3486001.3486228" target="_blank"><b>Source-code similarity measurement: syntax tree fingerprinting for automated evaluation</b></a>
+                            <br/>
+                            In <a><b>AI ML Systems </b></a>, 2021.
+                            <br/>
+                        </li>
+                        <li>
+                            <a href="https://www.sciencedirect.com/science/article/abs/pii/S0378437121005719" target="_blank"><b>Firm dynamics and employee performance management in duopoly markets</b></a>
+                            <br/>
+                            In <a><b>Physica A: Statistical Mechanics and its Applications</b></a>.
+                            <br/>
+			            </li>
+		            </ul>
+		            <!-- <h3>2022</h3> -->
+                    <!-- <ul class="pl">
+		            </ul> -->
+                   
+                </div>
+            </div>
+   
+
+            <footer class="pt-2 my-md-2 pt-md-2 border-top">
+                <div class="row justify-content-center">
+                   
+                    <div class="col-6 col-md text-right">
+                     <!--   <a href="https://nlp.stanford.edu" class="image-link">
+                            <img class="mr-4" src="img/stanford_nlp_logo.gif" alt="Stanford NLP Group logo." height="75">
+                        </a>
+                       -->
+<!--                         <a href="https://www.iitb.ac.in/" class="image-link">
+                            <img src="img/iitb_logo.png" alt="IIT Bombay." height="75">
+                        </a> -->
+                    </div>
+                </div>
+            </footer>
+        </div>
+    </body>
+</html>
