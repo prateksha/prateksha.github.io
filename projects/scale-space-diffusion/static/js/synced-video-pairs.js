@@ -9,6 +9,19 @@ function initSyncedVideoPair(config) {
 
   let isSeeking = false;
   let maxDuration = 0;
+  const DRIFT_TOLERANCE_SEC = Number.isFinite(config.driftToleranceSec) ? config.driftToleranceSec : 0.04;
+  const LOOP_RESET_TOLERANCE_SEC = Number.isFinite(config.loopResetToleranceSec) ? config.loopResetToleranceSec : 0.15;
+
+  const withinLoopReset = (v) => Number.isFinite(v.duration) && v.duration > 0 && v.currentTime >= v.duration - LOOP_RESET_TOLERANCE_SEC;
+  const alignFollowerToMaster = () => {
+    if (isSeeking || maxDuration <= 0) return;
+    const masterTime = Math.min(videoA.currentTime, maxDuration);
+    const followerTime = Math.min(videoB.currentTime, maxDuration);
+    const drift = Math.abs(masterTime - followerTime);
+    if (drift > DRIFT_TOLERANCE_SEC || (withinLoopReset(videoA) !== withinLoopReset(videoB))) {
+      videoB.currentTime = masterTime;
+    }
+  };
 
   const updateToggle = () => {
     const isPaused = videoA.paused || videoB.paused;
@@ -69,6 +82,15 @@ function initSyncedVideoPair(config) {
 
   videoA.addEventListener("loadedmetadata", updateDuration);
   videoB.addEventListener("loadedmetadata", updateDuration);
+  videoA.addEventListener("timeupdate", alignFollowerToMaster);
+  videoA.addEventListener("seeking", alignFollowerToMaster);
+  videoA.addEventListener("seeked", alignFollowerToMaster);
+  videoA.addEventListener("ratechange", () => {
+    videoB.playbackRate = videoA.playbackRate;
+  });
+  videoA.addEventListener("ended", () => {
+    videoB.currentTime = 0;
+  });
   videoA.addEventListener("timeupdate", syncSliderFromVideos);
   videoB.addEventListener("timeupdate", syncSliderFromVideos);
   videoA.addEventListener("play", updateToggle);
@@ -89,6 +111,7 @@ function initSyncedVideoPair(config) {
     updateDuration();
     videoA.currentTime = 0;
     videoB.currentTime = 0;
+    videoB.playbackRate = videoA.playbackRate;
     await playBoth();
   });
 }
