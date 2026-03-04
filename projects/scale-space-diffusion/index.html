@@ -123,37 +123,39 @@
         <h2 class="title is-4">TL;DR</h2>
         <h2 class="title is-5">
           Why use more pixels when less can do the trick?
-          <!-- <button id="memeTrigger" type="button" aria-label="Open reference image" style="margin-left:4px; border:none; background:#1f2937; cursor:pointer; font-size:0.72rem; color:#facc15; width:14px; height:19px; border-radius:999px; line-height:1; box-shadow:0 1px 5px rgba(15,23,42,0.22); vertical-align:super; position:relative; top:-1px; display:inline-flex; align-items:center; justify-content:center; padding:0;">
-          💡
-          </button> -->
-          <button
-            id="memeTrigger"
-            type="button"
-            aria-label="Open reference image"
-            style="
-              margin-left:4px;
-              border:none;
-              background:#1f2937;
-              cursor:pointer;
-              font-size:0.72rem;
-              color:#ffd84d;
-              width:18px;
-              height:19px;
-              border-radius:999px;
-              line-height:1;
-              vertical-align:super;
-              position:relative;
-              top:-1px;
-              display:inline-flex;
-              align-items:center;
-              justify-content:center;
-              padding:0;
-              text-shadow:0 0 3px rgba(255,216,77,0.55), 0 0 7px rgba(255,216,77,0.3);
-              box-shadow:0 0 6px rgba(255,216,77,0.2), 0 1px 5px rgba(15,23,42,0.22);
-            "
-          >
-            💡
-          </button>
+          <span id="memeHoverWrap" style="margin-left:4px; display:inline-block; position:relative; vertical-align:super;">
+            <span
+              id="memeTrigger"
+              role="button"
+              aria-label="Show reference image"
+              tabindex="0"
+              style="
+                background:#1f2937;
+                cursor:pointer;
+                font-size:0.72rem;
+                color:#ffd84d;
+                width:18px;
+                height:19px;
+                border-radius:999px;
+                line-height:1;
+                position:relative;
+                top:-1px;
+                display:inline-flex;
+                align-items:center;
+                justify-content:center;
+                padding:0;
+                text-shadow:0 0 3px rgba(255,216,77,0.55), 0 0 7px rgba(255,216,77,0.3);
+                box-shadow:0 0 6px rgba(255,216,77,0.2), 0 1px 5px rgba(15,23,42,0.22);
+              "
+            >
+              💡
+            </span>
+            <span id="memeModal" aria-hidden="true" style="display:none; position:absolute; left:calc(100% + 10px); top:50%; z-index:9999; width:min(360px, 78vw); background:#ffffff; border:1px solid #d8e4ff; border-radius:14px; box-shadow:0 12px 32px rgba(18, 42, 90, 0.22); padding:10px; opacity:0; transform:translateY(calc(-50% + 8px)); transition:opacity .18s ease, transform .18s ease;">
+              <span style="overflow:hidden; border-radius:10px; display:block;">
+                <img src="static/images/reference.png" alt="Meme reference" style="width:100%; height:auto; display:block;">
+              </span>
+            </span>
+          </span>
 
         </h2>
 
@@ -161,24 +163,23 @@
         <img src="static/images/why_use_more.png"
              alt="TLDR summary"
              style="width:100%; height:auto; display:block; margin:0 auto;">
-        <div id="memeModal" aria-hidden="true" style="display:none; position:fixed; right:18px; top:50%; transform:translateY(calc(-50% + 8px)); z-index:9999; width:min(480px, 86vw); background:#ffffff; border:1px solid #d8e4ff; border-radius:14px; box-shadow:0 12px 32px rgba(18, 42, 90, 0.22); padding:10px; opacity:0; transition:opacity .18s ease, transform .18s ease;">
-          <button id="memeClose" type="button" aria-label="Close meme" style="position:absolute; top:8px; right:8px; border:none; background:rgba(241,245,255,0.95); color:#24468a; border-radius:999px; padding:2px 8px; cursor:pointer; font-size:0.78rem; line-height:1.4;">Close</button>
-          <div style="overflow:hidden; border-radius:10px;">
-            <img src="static/images/reference.png" alt="Meme reference" style="width:100%; height:auto; display:block;">
-          </div>
-        </div>
       </div>
     </div>
   </div>
 </section>
 <script>
   (function () {
+    const wrap = document.getElementById('memeHoverWrap');
     const trigger = document.getElementById('memeTrigger');
     const modal = document.getElementById('memeModal');
-    const closeBtn = document.getElementById('memeClose');
-    if (!trigger || !modal || !closeBtn) return;
+    if (!wrap || !trigger || !modal) return;
+    let hideTimer = null;
 
     const openModal = () => {
+      if (hideTimer) {
+        clearTimeout(hideTimer);
+        hideTimer = null;
+      }
       modal.style.display = 'block';
       requestAnimationFrame(() => {
         modal.style.opacity = '1';
@@ -187,6 +188,26 @@
       modal.setAttribute('aria-hidden', 'false');
     };
     const closeModal = () => {
+      if (hideTimer) clearTimeout(hideTimer);
+      hideTimer = setTimeout(() => {
+        modal.style.opacity = '0';
+        modal.style.transform = 'translateY(calc(-50% + 8px))';
+        modal.setAttribute('aria-hidden', 'true');
+        setTimeout(() => {
+          if (modal.getAttribute('aria-hidden') === 'true') {
+            modal.style.display = 'none';
+          }
+        }, 180);
+      }, 60);
+    };
+
+    wrap.addEventListener('mouseenter', openModal);
+    wrap.addEventListener('mouseleave', closeModal);
+    trigger.addEventListener('focus', openModal);
+    trigger.addEventListener('blur', closeModal);
+
+    document.addEventListener('keydown', (e) => {
+      if (e.key !== 'Escape') return;
       modal.style.opacity = '0';
       modal.style.transform = 'translateY(calc(-50% + 8px))';
       modal.setAttribute('aria-hidden', 'true');
@@ -195,12 +216,6 @@
           modal.style.display = 'none';
         }
       }, 180);
-    };
-
-    trigger.addEventListener('click', openModal);
-    closeBtn.addEventListener('click', closeModal);
-    document.addEventListener('keydown', (e) => {
-      if (e.key === 'Escape') closeModal();
     });
   })();
 </script>
@@ -274,7 +289,7 @@
       <div class="container is-max-desktop">
         <figure style="margin:0;">
           <div style="margin-top:16px;">
-            <video id="stackVid1" autoplay loop muted playsinline preload="auto" style="width:100%; display:block;">
+            <video id="stackVid1" autoplay loop muted playsinline preload="auto" style="width:75%; display:block; margin:0 auto;">
               <source src="static/videos/ssd_vs_ddpm_unrolling_5_8_3x_firefox_h264.mp4" type="video/mp4">
               <source src="static/videos/ssd_vs_ddpm_unrolling_5_8_3x.mp4" type="video/mp4">
               Your browser does not support this video format.
