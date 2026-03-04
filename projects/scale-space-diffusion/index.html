@@ -151,6 +151,7 @@
               💡
             </span>
             <span id="memeModal" aria-hidden="true" style="display:none; position:absolute; left:calc(100% + 10px); top:50%; z-index:9999; width:min(360px, 78vw); background:#ffffff; border:1px solid #d8e4ff; border-radius:14px; box-shadow:0 12px 32px rgba(18, 42, 90, 0.22); padding:10px; opacity:0; transform:translateY(calc(-50% + 8px)); transition:opacity .18s ease, transform .18s ease;">
+              <button id="memeClose" type="button" aria-label="Close reference" style="position:absolute; top:6px; right:6px; border:none; background:rgba(17,24,39,0.85); color:#fff; width:20px; height:20px; border-radius:50%; font-size:12px; line-height:20px; text-align:center; cursor:pointer; padding:0;">×</button>
               <span style="overflow:hidden; border-radius:10px; display:block;">
                 <img src="static/images/reference.png" alt="Meme reference" style="width:100%; height:auto; display:block;">
               </span>
@@ -170,19 +171,20 @@
 <style>
   @media (max-width: 768px) {
     #memeModal {
-      position: fixed !important;
-      left: 50% !important;
-      top: 50% !important;
-      width: min(82vw, 300px) !important;
-      max-width: 82vw !important;
-      max-height: 60vh !important;
-      transform: translate(-50%, calc(-50% + 8px)) !important;
+      position: absolute !important;
+      left: auto !important;
+      right: 0 !important;
+      top: calc(100% + 8px) !important;
+      width: min(76vw, 280px) !important;
+      max-width: 76vw !important;
+      max-height: 52vh !important;
+      transform: translateY(8px) !important;
       overflow: auto !important;
       box-sizing: border-box !important;
     }
 
     #memeModal[data-open="true"] {
-      transform: translate(-50%, -50%) !important;
+      transform: translateY(0) !important;
     }
   }
 </style>
@@ -191,8 +193,10 @@
     const wrap = document.getElementById('memeHoverWrap');
     const trigger = document.getElementById('memeTrigger');
     const modal = document.getElementById('memeModal');
-    if (!wrap || !trigger || !modal) return;
+    const closeBtn = document.getElementById('memeClose');
+    if (!wrap || !trigger || !modal || !closeBtn) return;
     let hideTimer = null;
+    const isMobile = () => window.matchMedia('(max-width: 768px)').matches;
 
     const openModal = () => {
       if (hideTimer) {
@@ -203,7 +207,7 @@
       modal.setAttribute('data-open', 'true');
       requestAnimationFrame(() => {
         modal.style.opacity = '1';
-        modal.style.transform = 'translateY(-50%)';
+        modal.style.transform = isMobile() ? 'translateY(0)' : 'translateY(-50%)';
       });
       modal.setAttribute('aria-hidden', 'false');
     };
@@ -211,7 +215,7 @@
       if (hideTimer) clearTimeout(hideTimer);
       hideTimer = setTimeout(() => {
         modal.style.opacity = '0';
-        modal.style.transform = 'translateY(calc(-50% + 8px))';
+        modal.style.transform = isMobile() ? 'translateY(8px)' : 'translateY(calc(-50% + 8px))';
         modal.removeAttribute('data-open');
         modal.setAttribute('aria-hidden', 'true');
         setTimeout(() => {
@@ -226,6 +230,20 @@
     wrap.addEventListener('mouseleave', closeModal);
     trigger.addEventListener('focus', openModal);
     trigger.addEventListener('blur', closeModal);
+    trigger.addEventListener('click', (e) => {
+      if (!isMobile()) return;
+      e.stopPropagation();
+      if (modal.getAttribute('aria-hidden') === 'false') closeModal();
+      else openModal();
+    });
+    closeBtn.addEventListener('click', (e) => {
+      e.stopPropagation();
+      closeModal();
+    });
+    document.addEventListener('click', (e) => {
+      if (!isMobile()) return;
+      if (!wrap.contains(e.target)) closeModal();
+    });
 
     document.addEventListener('keydown', (e) => {
       if (e.key !== 'Escape') return;
