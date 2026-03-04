@@ -121,102 +121,112 @@
     <div class="columns is-centered has-text-centered">
       <div class="column is-four-fifths">
         <h2 class="title is-4">TL;DR</h2>
-        <img src="static/images/tldr.png"
+        <h2 class="title is-5">
+          Why process more pixels when fewer suffice?
+          <button id="memeTrigger" type="button" aria-label="Open reference image" style="margin-left:8px; border:none; background:none; cursor:pointer; font-size:0.9rem; color:#3273dc; padding:0;">
+          💡 click!
+          </button>
+        </h2>
+
+
+        <!-- <p><strong>Why process more pixels when fewer suffice?</strong> </p> -->
+        <img src="static/images/why_use_more.png"
              alt="TLDR summary"
-             style="width:70%; height:auto; display:block; margin:0 auto;">
+             style="width:100%; height:auto; display:block; margin:0 auto;">
+        <div id="memeModal" aria-hidden="true" style="display:none; position:fixed; right:18px; top:50%; transform:translateY(calc(-50% + 8px)); z-index:9999; width:min(480px, 86vw); background:#ffffff; border:1px solid #d8e4ff; border-radius:14px; box-shadow:0 12px 32px rgba(18, 42, 90, 0.22); padding:10px; opacity:0; transition:opacity .18s ease, transform .18s ease;">
+          <button id="memeClose" type="button" aria-label="Close meme" style="position:absolute; top:8px; right:8px; border:none; background:rgba(241,245,255,0.95); color:#24468a; border-radius:999px; padding:2px 8px; cursor:pointer; font-size:0.78rem; line-height:1.4;">Close</button>
+          <div style="overflow:hidden; border-radius:10px;">
+            <img src="static/images/reference.png" alt="Meme reference" style="width:100%; height:auto; display:block;">
+          </div>
+        </div>
       </div>
     </div>
   </div>
 </section>
+<script>
+  (function () {
+    const trigger = document.getElementById('memeTrigger');
+    const modal = document.getElementById('memeModal');
+    const closeBtn = document.getElementById('memeClose');
+    if (!trigger || !modal || !closeBtn) return;
+
+    const openModal = () => {
+      modal.style.display = 'block';
+      requestAnimationFrame(() => {
+        modal.style.opacity = '1';
+        modal.style.transform = 'translateY(-50%)';
+      });
+      modal.setAttribute('aria-hidden', 'false');
+    };
+    const closeModal = () => {
+      modal.style.opacity = '0';
+      modal.style.transform = 'translateY(calc(-50% + 8px))';
+      modal.setAttribute('aria-hidden', 'true');
+      setTimeout(() => {
+        if (modal.getAttribute('aria-hidden') === 'true') {
+          modal.style.display = 'none';
+        }
+      }, 180);
+    };
+
+    trigger.addEventListener('click', openModal);
+    closeBtn.addEventListener('click', closeModal);
+    document.addEventListener('keydown', (e) => {
+      if (e.key === 'Escape') closeModal();
+    });
+  })();
+</script>
 
 <section class="section">
   <div class="container is-max-desktop">
     <div style="
       display: grid;
       grid-template-columns: 1fr 1.5fr;
-      gap: 40px;
-      align-items: center;
+      gap: 0;
+      align-items: start;
+      width: 92%;
+      margin: 0 auto;
     ">
-      <div>
+      <div style="transform: translateX(18px);">
         <img src="static/images/teaser.png"
              style="width: 100%; height: auto;" />
       </div>
-      <div style="display:flex; justify-content:center;">
-        <video id="heroPreviewVideo" autoplay loop muted playsinline style="width:70%; height:auto; display:block; margin:0 auto;">
-          <source src="static/videos/xt_ssd_x0_256_2x2_40_30ef_1.0x.mp4" type="video/mp4">
-        </video>
+      <div style="display:flex; justify-content:center; align-items:flex-start;">
+        <div style="width:100%;">
+          <video id="heroPreviewVideo" autoplay loop muted playsinline style="width:70%; height:auto; display:block; margin:0 auto;">
+            <source src="static/videos/xt_ssd_x0_256_2x2_40_30ef_1.0x.mp4" type="video/mp4">
+          </video>
+        </div>
       </div>
     </div>
+    <p style="margin:12px auto 0 auto; width:92%; text-align:center; font-size:0.95rem; line-height:1.5;">
+      <strong>Left:</strong> Our proposed Scale Space Diffusion (SSD) fuses scale spaces into diffusion models. Along the y-axis, increasing diffusion noise removes fine facial details; along the x-axis, decreasing resolution in a Gaussian pyramid causes similar information loss.
+      <strong>Right:</strong> Visualization of the inference process using SSD (Flexi-UNet, 6L).
+    </p>
     <script>
       (function () {
         const video = document.getElementById('heroPreviewVideo');
         if (!video) return;
 
+        video.muted = true;
+        video.defaultMuted = true;
         video.controls = false;
         video.addEventListener('mouseenter', () => { video.controls = true; });
         video.addEventListener('mouseleave', () => { video.controls = false; });
         video.addEventListener('focusin', () => { video.controls = true; });
         video.addEventListener('focusout', () => { video.controls = false; });
+        video.play().catch(() => { video.controls = true; });
       })();
     </script>
   </div>
 </section>
-
-<!--
-<section class="section">
-  <div class="container is-max-desktop">
-
-    <div style="
-      display: grid;
-      grid-template-columns: 1fr 1.5fr;
-      gap: 40px;
-      align-items: start;
-    ">
-
-      <div>
-        <img src="static/images/teaser.png"
-             style="width: 100%; height: auto;" />
-      </div>
-
-      <div style="
-        display: flex;
-        flex-direction: column;
-        gap: 20px;
-        height: 100%;
-      ">
-      <video id="compareVid1" loop muted playsinline style="width:100%; height:calc((100% - 20px) / 2); object-fit:contain; display:block;">
-        <source src="static/videos/xt_ssd_64_4_10_3_stacked_cumulative_strip_whitebg.mp4" type="video/mp4">
-      </video>
-      <p style="margin:-8px 0 0 0; line-height:1.3; font-weight:600; font-size:0.95rem; text-align:center;">
-        Our method: Scale Space Diffusion (SSD)
-      </p>
-
-      <video id="compareVid2" loop muted playsinline style="width:100%; height:calc((100% - 20px) / 2); object-fit:contain; display:block;">
-        <source src="static/videos/xt_ddpm_x0_64_10_3_stacked_cumulative_strip_whitebg.mp4" type="video/mp4">
-      </video>
-      <p style="margin:-8px 0 0 0; line-height:1.3; font-weight:600; font-size:0.95rem; text-align:center;">
-        Baseline: DDPM
-      </p>
-
-      <div style="display:flex; align-items:center; gap:10px;">
-        <button id="compareToggle" type="button" class="button is-small is-dark is-rounded" aria-label="Pause both videos">⏸ Pause</button>
-        <input id="compareSlider" type="range" min="0" max="1000" step="1" value="0" style="width:100%;">
-      </div>
-
-      </div>
-
-    </div>
-
-  </div>
-</section>
--->
 
 <section class="section">
   <div class="container is-max-desktop">
     <!-- Abstract. -->
     <div class="columns is-centered has-text-centered">
       <div class="column is-four-fifths">
-        <h2 class="title is-3">Abstract</h2>
+        <h2 class="title is-4">Abstract</h2>
         <div class="content has-text-justified">
           <p>
             Diffusion models degrade images through noise, and reversing this process reveals an information hierarchy across timesteps. Scale-space theory exhibits a similar hierarchy via low-pass filtering. 
@@ -235,29 +245,23 @@
     <section class="section">
       <div class="container is-max-desktop">
         <figure style="margin:0;">
-          <div style="display:flex; flex-direction:column; gap:12px; line-height:0;">
-            <video id="stackVid1" autoplay loop muted playsinline style="width:100%; display:block;">
-              <source src="static/videos/ssd_64_4levels_unrolling_4ef.mp4" type="video/mp4">
+          <div style="margin-top:16px;">
+            <video id="stackVid1" autoplay loop muted playsinline preload="auto" style="width:100%; display:block;">
+              <source src="static/videos/ssd_vs_ddpm_unrolling_5_8_3x_firefox_h264.mp4" type="video/mp4">
+              <source src="static/videos/ssd_vs_ddpm_unrolling_5_8_3x.mp4" type="video/mp4">
+              Your browser does not support this video format.
             </video>
-            <p style="margin:-8px 0 0 0; line-height:1.3; font-weight:600; font-size:0.95rem; text-align:center;">
-              Our method: Scale Space Diffusion (SSD)
-            </p>
-
-            <video id="stackVid2" autoplay loop muted playsinline style="width:100%; display:block;">
-              <source src="static/videos/ddpm_with_ssd_out_unrolling_4ef.mp4" type="video/mp4">
-            </video>
-            <p style="margin:-8px 0 0 0; line-height:1.3; font-weight:600; font-size:0.95rem; text-align:center;">
-              Baseline: DDPM
-            </p>
           </div>
           <figcaption style="margin-top:10px; text-align:center; font-size:0.95rem; font-style:normal; line-height:1.5;">
-            <strong>Evolution of \(x_t\) over diffusion steps \(t\).</strong> We compare SSD, which starts from lower resolution and progressively moves to higher resolutions, against DDPM, which operates at the highest resolution throughout sampling.
+            <strong>Evolution of \(x_t\) over diffusion steps \(t\).</strong> We compare SSD (top row), which begins sampling at lower resolutions and progressively increases resolution, 
+            against DDPM (bottom row), which operates at the highest resolution throughout the sampling process.
+            As shown above, for \( 64 \times 64 \) generation,  SSD (Flexi-UNet, 4L) achieves a \( 1.58 \times \) inference speedup compared to DDPM.
           </figcaption>
         </figure>
-
         <div style="margin-top:14px; display:flex; justify-content:center;">
-          <button id="stackToggle" type="button" class="button is-small is-dark is-rounded" aria-label="Pause both videos">⏸ Pause</button>
+          <button id="stackToggle" type="button" class="button is-small is-dark is-rounded" aria-label="Pause video">⏸ Pause</button>
         </div>
+        
 
       </div>
     </section>
@@ -265,11 +269,11 @@
 
     <div class="columns is-centered has-text-centered" style="margin-top: 28px;">
       <div class="column is-four-fifths">
-        <h2 class="title is-3">Scale Spaces vis-à-vis Diffusion Timesteps</h2>
+        <h2 class="title is-4">Scale Spaces vis-à-vis Diffusion Timesteps</h2>
         <figure style="margin: 0;">
           <img src="static/images/info_viz.png"
                alt="Scale spaces vis-a-vis diffusion timesteps"
-               style="width:100%; height:auto; display:block;">
+               style="width:85%; height:auto; display:block;">
           <figcaption style="margin-top:8px; text-align:center; font-size:0.95rem; font-style:normal; line-height:1.5;">
             <strong>Information Analysis.</strong> (a) Amount of information present in a diffusion state as diffusion step \(t\) changes.
             (b) Amount of information present in images at various resolutions (scales).
@@ -285,7 +289,7 @@
     <!-- Method Overview -->
     <div class="columns is-centered has-text-centered">
       <div class="column is-four-fifths">
-        <h2 class="title is-3">SSD Overview</h2>
+        <h2 class="title is-4">SSD Overview</h2>
         <figure class="method-overview" style="margin:0;">
           <img
             src="static/images/training_overview.png"
@@ -304,7 +308,7 @@
 
     <div class="columns is-centered has-text-centered" style="margin-top: 20px;">
       <div class="column is-four-fifths">
-        <h2 class="title is-3">Method</h2>
+        <h2 class="title is-4">Method</h2>
         <div class="content has-text-justified">
           <h3 class="title is-5"> Scale Space Diffusion Formulation</h3>
           <!-- <video controls playsinline preload="metadata" style="width:100%; height:auto; display:block; margin-bottom:16px;">
@@ -317,21 +321,14 @@
           </p>
 
           <img src="static/images/choice_Mt.png" alt="Choice of M_t illustration" style="width:90%; height:auto; display:block; margin:16px auto 0 auto;">
-          <!-- <p style="margin-top:8px;">
-          </p> -->
-          <!-- <img src="static/images/forward_reverse.png" alt="Forward and Reverse Process" style="width:100%; height:auto; display:block; margin:16px auto 0 auto;"> -->
-          <!-- <p style="margin-top:8px;">
-            Forward Transition Distribution and Reverse Process
-          </p>
-          <img src="static/images/forward.png" alt="Forward process illustration" style="width:100%; height:auto; display:block; margin-top:16px;">
-          <img src="static/images/reverse.png" alt="Reverse process illustration" style="width:100%; height:auto; display:block; margin-top:16px;"> -->
 
           <h3 class="title is-5"> Architecture: Flexi-UNet</h3>
           <figure style="margin:16px 0 0 0;">
-            <img src="static/images/flexi_vs_full.png" alt="Flexi-UNet vs FullUnet" style="width:80%; height:auto; display:block; margin:0 auto;">
+            <img src="static/images/flexi_vs_full_unet.png" alt="Flexi-UNet vs FullUnet" style="width:80%; height:auto; display:block; margin:0 auto;">
+             
             <figcaption style="margin-top:10px; text-align:justify; font-style:normal;">
               <strong>Architecture: Flexi-UNet vs Full UNet.</strong>
-              Comparison between the proposed Flexi-UNet and standard Full UNet architecture for SSD. While the Full UNet processes all timesteps using a fixed symmetric encoder-decoder path and equal input-output resolutions,
+              While the Full UNet processes all timesteps using a fixed symmetric encoder-decoder path and equal input-output resolutions,
               Flexi-UNet dynamically activates resolution-dependent subsets of layers.
               Low-resolution inputs are only passed through the deeper blocks, and resolution transitions are handled via asymmetric pathways.
             </figcaption>
@@ -347,28 +344,27 @@
   <div class="container is-max-desktop">
     <div class="columns is-centered has-text-centered">
       <div class="column is-four-fifths">
-        <h2 class="title is-3">Results</h2>
+        <h2 class="title is-4">Results</h2>
 
-        <figure style="margin: 26px 0 0 0;">
-          <img src="static/images/results_fid_time.png"
-              alt="Training time results"
-              style="width:80%; height:auto; display:block; margin:0 auto;">
-          <figcaption style="margin-top:12px; text-align:center; font-size:0.95rem; color:#4a4a4a; line-height:1.5;">
-            <strong>Main Results</strong> Unconditional image generation results on CelebA dataset over multiple resolutions. 
-            Training time is specified in hours. Average GFlops per iteration. 
-            Effective batch size is 128 for resolutions 64 and 128, 64 for resolution 256. Here BD refers to Blurring Diffusion and all SSD models use our Flexi-UNet architecture. 
-          </figcaption>
-        </figure>
+        <!-- <div style="margin-top:26px; display:grid; grid-template-columns:repeat(auto-fit, minmax(280px, 1fr)); gap:24px; align-items:start;"> -->
+        <div style="margin-top:26px; display:grid; grid-template-columns:1.2fr 1fr; gap:24px; align-items:start;">
 
+          <figure style="margin:0;">
+            <img src="static/images/results_fid_time.png"
+                alt="Training time results"
+                style="width:100%; height:auto; display:block; margin:0 auto;">
+          </figure>
 
-        <figure style="margin: 26px 0 0 0;">
-          <img src="static/images/results_training_time.png"
-              alt="Training time results"
-              style="width:50%; height:auto; display:block; margin:0 auto;">
-          <figcaption style="margin-top:12px; text-align:center; font-size:0.95rem; color:#4a4a4a; line-height:1.5;">
-            <strong>Temporal Scaling.</strong> Training time of proposed SSD with our Flexi-UNet scales well with increasing resolution.
-          </figcaption>
-        </figure>
+          <figure style="margin:0;">
+            <img src="static/images/results_training_time.png"
+                alt="Training time results"
+                style="width:100%; height:auto; display:block; margin:0 auto;">
+          </figure>
+        </div>
+        <p style="margin:12px 0 0 0; text-align:center; font-size:0.95rem; color:#4a4a4a; line-height:1.5;">
+          <strong>Left:</strong> DDPM-\(x_0\) is a special case of SSD: SSD(1L). The table shows that SSD can save substantial training compute while achieving comparable FID.
+          <strong>Right:</strong> SSD achieves substantially lower training time, with efficiency gains increasing at higher resolutions and with more levels.
+        </p>
 
         <figure style="margin: 26px 0 0 0;">
           <img src="static/images/visual_results.png"
@@ -417,9 +413,9 @@
         <figure style="margin: 26px 0 0 0;">
           <img src="static/images/ssd_thumbnail.gif"
               alt="CelebA-32 generations"
-              style="width:50%; height:auto; display:block; margin:0 auto;">
+              style="width:25%; height:auto; display:block; margin:0 auto;">
           <figcaption style="margin-top:12px; text-align:center; font-size:0.95rem; color:#4a4a4a; line-height:1.5;">
-            Animation of the predicted clean image \(x_{0, \theta}^{r(t−1)} \) over the generation process for gradual downsizing degradation operator in SSD framework.
+            Animation of the predicted clean image \(x_{0, \theta}^{r(t−1)} \) over the generation process for gradual downsizing degradation (instead of stepwise \(2 \times \) downsizing) operator in SSD framework. 
           </figcaption>
         </figure>
       </div>

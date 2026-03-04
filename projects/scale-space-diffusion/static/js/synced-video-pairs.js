@@ -1,133 +1,47 @@
-function initSyncedVideoPair(config) {
-  const videoA = document.getElementById(config.videoAId);
-  const videoB = document.getElementById(config.videoBId);
+function initVideoToggle(config) {
+  const video = document.getElementById(config.videoId);
   const toggleBtn = document.getElementById(config.toggleId);
-  const slider = document.getElementById(config.sliderId);
-  const hasSlider = !!slider;
-
-  if (!videoA || !videoB || !toggleBtn) return;
-
-  let isSeeking = false;
-  let maxDuration = 0;
-  const DRIFT_TOLERANCE_SEC = Number.isFinite(config.driftToleranceSec) ? config.driftToleranceSec : 0.04;
-  const LOOP_RESET_TOLERANCE_SEC = Number.isFinite(config.loopResetToleranceSec) ? config.loopResetToleranceSec : 0.15;
-
-  const withinLoopReset = (v) => Number.isFinite(v.duration) && v.duration > 0 && v.currentTime >= v.duration - LOOP_RESET_TOLERANCE_SEC;
-  const alignFollowerToMaster = () => {
-    if (isSeeking || maxDuration <= 0) return;
-    const masterTime = Math.min(videoA.currentTime, maxDuration);
-    const followerTime = Math.min(videoB.currentTime, maxDuration);
-    const drift = Math.abs(masterTime - followerTime);
-    if (drift > DRIFT_TOLERANCE_SEC || (withinLoopReset(videoA) !== withinLoopReset(videoB))) {
-      videoB.currentTime = masterTime;
-    }
-  };
+  if (!video || !toggleBtn) return;
 
   const updateToggle = () => {
-    const isPaused = videoA.paused || videoB.paused;
+    const isPaused = video.paused;
     toggleBtn.textContent = isPaused ? "▶ Play" : "⏸ Pause";
-    toggleBtn.setAttribute("aria-label", isPaused ? "Play both videos" : "Pause both videos");
+    toggleBtn.setAttribute("aria-label", isPaused ? "Play video" : "Pause video");
   };
 
-  const updateDuration = () => {
-    const a = Number.isFinite(videoA.duration) ? videoA.duration : 0;
-    const b = Number.isFinite(videoB.duration) ? videoB.duration : 0;
-    maxDuration = Math.min(a, b);
-    if (hasSlider && maxDuration > 0) slider.max = String(Math.floor(maxDuration * 1000));
-  };
-
-  const playBoth = async () => {
+  const playVideo = async () => {
     try {
-      await Promise.all([videoA.play(), videoB.play()]);
+      await video.play();
     } catch (_) {
-      // Ignore autoplay/play promise failures caused by browser policy.
+      // Allow manual playback if autoplay is blocked.
+      video.controls = true;
     }
     updateToggle();
   };
 
-  const pauseBoth = () => {
-    videoA.pause();
-    videoB.pause();
+  const pauseVideo = () => {
+    video.pause();
     updateToggle();
-  };
-
-  const syncSliderFromVideos = () => {
-    if (!hasSlider || isSeeking || maxDuration <= 0) return;
-    const t = Math.min(videoA.currentTime, videoB.currentTime, maxDuration);
-    slider.value = String(Math.floor(t * 1000));
-  };
-
-  const seekBoth = () => {
-    if (!hasSlider) return;
-    if (maxDuration <= 0) return;
-    const t = Math.min(Number(slider.value) / 1000, maxDuration);
-    isSeeking = true;
-    videoA.currentTime = t;
-    videoB.currentTime = t;
-    isSeeking = false;
   };
 
   toggleBtn.addEventListener("click", async () => {
-    if (videoA.paused || videoB.paused) {
-      await playBoth();
+    if (video.paused) {
+      await playVideo();
       return;
     }
-    pauseBoth();
+    pauseVideo();
   });
 
-  if (hasSlider) {
-    slider.addEventListener("pointerdown", pauseBoth);
-    slider.addEventListener("input", seekBoth);
-  }
+  video.addEventListener("play", updateToggle);
+  video.addEventListener("pause", updateToggle);
 
-  videoA.addEventListener("loadedmetadata", updateDuration);
-  videoB.addEventListener("loadedmetadata", updateDuration);
-  videoA.addEventListener("timeupdate", alignFollowerToMaster);
-  videoA.addEventListener("seeking", alignFollowerToMaster);
-  videoA.addEventListener("seeked", alignFollowerToMaster);
-  videoA.addEventListener("ratechange", () => {
-    videoB.playbackRate = videoA.playbackRate;
-  });
-  videoA.addEventListener("ended", () => {
-    videoB.currentTime = 0;
-  });
-  videoA.addEventListener("timeupdate", syncSliderFromVideos);
-  videoB.addEventListener("timeupdate", syncSliderFromVideos);
-  videoA.addEventListener("play", updateToggle);
-  videoB.addEventListener("play", updateToggle);
-  videoA.addEventListener("pause", updateToggle);
-  videoB.addEventListener("pause", updateToggle);
-
-  Promise.all([
-    new Promise((resolve) => {
-      if (videoA.readyState >= 1) resolve();
-      else videoA.addEventListener("loadeddata", resolve, { once: true });
-    }),
-    new Promise((resolve) => {
-      if (videoB.readyState >= 1) resolve();
-      else videoB.addEventListener("loadeddata", resolve, { once: true });
-    }),
-  ]).then(async () => {
-    updateDuration();
-    videoA.currentTime = 0;
-    videoB.currentTime = 0;
-    videoB.playbackRate = videoA.playbackRate;
-    await playBoth();
-  });
+  if (video.readyState === 0) video.load();
+  playVideo();
 }
 
 document.addEventListener("DOMContentLoaded", () => {
-  initSyncedVideoPair({
-    videoAId: "compareVid1",
-    videoBId: "compareVid2",
-    toggleId: "compareToggle",
-    sliderId: "compareSlider",
-  });
-
-  initSyncedVideoPair({
-    videoAId: "stackVid1",
-    videoBId: "stackVid2",
+  initVideoToggle({
+    videoId: "stackVid1",
     toggleId: "stackToggle",
-    sliderId: "stackSlider",
   });
 });
