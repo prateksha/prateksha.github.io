@@ -167,6 +167,20 @@
     </div>
   </div>
 </section>
+<style>
+  @media (max-width: 768px) {
+    #memeModal {
+      left: 50% !important;
+      top: calc(100% + 10px) !important;
+      width: min(92vw, 340px) !important;
+      transform: translate(-50%, 8px) !important;
+    }
+
+    #memeModal[data-open="true"] {
+      transform: translate(-50%, 0) !important;
+    }
+  }
+</style>
 <script>
   (function () {
     const wrap = document.getElementById('memeHoverWrap');
@@ -181,6 +195,7 @@
         hideTimer = null;
       }
       modal.style.display = 'block';
+      modal.setAttribute('data-open', 'true');
       requestAnimationFrame(() => {
         modal.style.opacity = '1';
         modal.style.transform = 'translateY(-50%)';
@@ -192,6 +207,7 @@
       hideTimer = setTimeout(() => {
         modal.style.opacity = '0';
         modal.style.transform = 'translateY(calc(-50% + 8px))';
+        modal.removeAttribute('data-open');
         modal.setAttribute('aria-hidden', 'true');
         setTimeout(() => {
           if (modal.getAttribute('aria-hidden') === 'true') {
@@ -208,14 +224,7 @@
 
     document.addEventListener('keydown', (e) => {
       if (e.key !== 'Escape') return;
-      modal.style.opacity = '0';
-      modal.style.transform = 'translateY(calc(-50% + 8px))';
-      modal.setAttribute('aria-hidden', 'true');
-      setTimeout(() => {
-        if (modal.getAttribute('aria-hidden') === 'true') {
-          modal.style.display = 'none';
-        }
-      }, 180);
+      closeModal();
     });
   })();
 </script>
