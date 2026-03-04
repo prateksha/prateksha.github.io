@@ -172,8 +172,11 @@
     #memeModal {
       left: 50% !important;
       top: calc(100% + 10px) !important;
-      width: min(92vw, 340px) !important;
+      width: calc(100vw - 24px) !important;
+      max-width: calc(100vw - 24px) !important;
+      max-height: 72vh !important;
       transform: translate(-50%, 8px) !important;
+      overflow: auto !important;
     }
 
     #memeModal[data-open="true"] {
