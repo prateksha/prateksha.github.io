@@ -85,6 +85,10 @@ video {
   display: inline-block;
 }
 
+.equal-contrib-marker {
+  color: #000;
+}
+
 .publication-banner img {
 }
 
@@ -128,6 +132,63 @@ video {
 
 .results-carousel video {
   margin: 0;
+}
+
+.bibtex-copy-button {
+  align-items: center;
+  background: rgba(255, 255, 255, 0.9);
+  border: 1px solid #d7deea;
+  border-radius: 999px;
+  box-shadow: 0 8px 20px rgba(15, 23, 42, 0.08);
+  color: #1f2937;
+  cursor: pointer;
+  display: inline-flex;
+  font-family: 'Google Sans', sans-serif;
+  font-size: 0.85rem;
+  font-weight: 600;
+  gap: 0.45rem;
+  padding: 0.45rem 0.85rem;
+  position: absolute;
+  right: 0.9rem;
+  top: 0.9rem;
+  transition: background-color 0.2s ease, border-color 0.2s ease, transform 0.2s ease;
+  z-index: 1;
+}
+
+.bibtex-copy-button:hover {
+  background: #ffffff;
+  border-color: #b8c4d6;
+  transform: translateY(-1px);
+}
+
+.bibtex-copy-button:focus-visible {
+  outline: 2px solid #2563eb;
+  outline-offset: 2px;
+}
+
+.bibtex-pre {
+  position: relative;
+  background: #f5f5f5;
+  border-radius: 0;
+  overflow-x: auto;
+  padding: 3.6rem 1.1rem 1.1rem;
+  white-space: pre-wrap;
+}
+
+.bibtex-pre code {
+  background: transparent;
+  color: #363636;
+}
+
+@media (max-width: 768px) {
+  .bibtex-copy-button {
+    right: 0.75rem;
+    top: 0.75rem;
+  }
+
+  .bibtex-pre {
+    padding-top: 3.4rem;
+  }
 }
 
 

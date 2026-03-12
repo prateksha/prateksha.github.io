@@ -63,9 +63,9 @@
 
           <div class="is-size-5 publication-authors">
             <span class="author-block">
-              <a href="https://soumik-kanad.github.io/">Soumik Mukhopadhyay*</a>,</span>
+              <a href="https://soumik-kanad.github.io/">Soumik Mukhopadhyay</a><span class="equal-contrib-marker">*</span>,</span>
             <span class="author-block">
-              <a href="https://prateksha.github.io/">Prateksha Udhayanan*</a>,</span>
+              <a href="https://prateksha.github.io/">Prateksha Udhayanan</a><span class="equal-contrib-marker">*</span>,</span>
             <span class="author-block">
               <a href="https://www.cs.umd.edu/~abhinav/">Abhinav Shrivastava</a>
             </span>
@@ -73,6 +73,8 @@
 
           <div class="is-size-5 publication-authors">
             <span class="author-block">University of Maryland, College Park</span>
+            <br>
+            <span class="author-block">* Equal contribution. </span>
           </div>
 
           <div class="column has-text-centered">
@@ -503,6 +505,22 @@
   </div>
 </section>
 
+<section class="section" id="BibTeX">
+  <div class="container is-max-desktop content">
+    <h2 class="title">BibTeX</h2>
+    <pre class="bibtex-pre"><button class="bibtex-copy-button" type="button" onclick="copyBibtex()">
+        <i class="far fa-copy" aria-hidden="true"></i>
+        <span>Copy</span>
+      </button>
+<code id="bibtex-entry">@article{mukhopadhyay2026scale,
+  title={Scale Space Diffusion},
+  author={Mukhopadhyay, Soumik and Udhayanan, Prateksha and Shrivastava, Abhinav},
+  journal={arXiv preprint arXiv:2603.08709},
+  year={2026}
+}</code></pre>
+  </div>
+</section>
+
 <footer class="footer">
   <div class="container">
     <div class="columns is-centered">
@@ -519,6 +537,21 @@
     </div>
   </div>
 </footer>
+
+<script>
+  function copyBibtex() {
+    const bibtex = document.getElementById('bibtex-entry');
+    const button = document.querySelector('.bibtex-copy-button');
+    if (!bibtex || !button) return;
+
+    navigator.clipboard.writeText(bibtex.textContent).then(() => {
+      button.innerHTML = '<i class="fas fa-check" aria-hidden="true"></i><span>Copied</span>';
+      setTimeout(() => {
+        button.innerHTML = '<i class="far fa-copy" aria-hidden="true"></i><span>Copy</span>';
+      }, 1500);
+    });
+  }
+</script>
 
 </body>
 </html>
